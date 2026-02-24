@@ -1,6 +1,6 @@
 class Solution {
     public int findMinArrowShots(int[][] points) {
-        Arrays.sort(points, (x,y)->Integer.compare(x[0],y[0]));->O(nlogn)
+        Arrays.sort(points, (x,y)->Integer.compare(x[0],y[0]));//O(nlogn)
         // determine the non-overlapping intervals
         int count = 0;
         int i = 1;
@@ -33,5 +33,32 @@ class Solution {
         }
         int arrCnt = n - count;
         return arrCnt;
+    }
+}
+class Solution {
+    public int findMinArrowShots(int[][] points) {
+        Arrays.sort(points, (x,y)->Integer.compare(x[0],y[0]));//O(nlogn)
+        // determine the non-overlapping intervals
+        int count = 1; // atleast 1 arrow would be required to atleast burst 0th balloon
+        int[] lastInterval = points[0];
+        int n = points.length;
+        for(int i = 1;i < n;i++){
+            int prevStart = lastInterval[0];
+            int prevEnd = lastInterval[1];
+            int currStart = points[i][0];
+            int currEnd = points[i][1];
+            if (prevEnd < currStart){
+                // non-overlapping case
+                lastInterval = points[i];
+                count++;//one more arrow would be required
+            }
+            else{
+                // overlapping case
+                // find overlapping interval
+                lastInterval[0] = Math.max(prevStart, currStart);
+                lastInterval[1] = Math.min(prevEnd, currEnd);
+            }
+        }
+        return count;
     }
 }
