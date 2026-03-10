@@ -114,3 +114,45 @@ class Solution {
         return false;
     }
 }
+// using Topological sort (using Kahn's algo)
+class Solution {
+    private int topoSort(int V,int[][] edges){
+        int nodeCnt = 0;
+        // using kahn's algo
+        int[] indegree = new int[V];
+        // populate indegree array
+        for(int[] edge: edges){
+            int v = edge[1];
+            indegree[v]++;
+        }
+        // maintain a queue where elements have indegree 0
+        Queue<Integer> que = new LinkedList<>();
+        for(int i = 0;i < V;i++){
+            if(indegree[i] == 0) 
+                que.add(i);
+        }
+        while(!que.isEmpty()){
+            int i = que.poll();
+            nodeCnt++;
+            for(int[] edge: edges){
+                int u = edge[0];
+                int v = edge[1];
+                if(u != i) continue;
+                // else u == i and v is its neighbour
+                // reduce indegree of v
+                indegree[v]--;
+                if(indegree[v] == 0) que.add(v);
+            }
+        }
+        return nodeCnt;
+    }
+    public boolean isCyclic(int V, int[][] edges) {
+        // code here
+        // using Topological sorting (Kahn's algo of BFS)
+        // to detect cycle in graph
+        int nodeCnt = topoSort(V, edges);
+        if(nodeCnt == V) return false;//no cycle exist
+        return true;//no topological sort -> cycle exist
+    }
+}
+
